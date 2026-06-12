@@ -69,3 +69,39 @@ nav {
     text-transform: uppercase;
   }
 }
+
+main {
+  display: flex;
+  flex-direction: column;
+  padding: 2rem 5rem;
+}
+
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.content {
+  height: 150px;
+  width: 300px;
+  padding: 1rem;
+  border: 1px solid #000;
+  border-radius: 20px;
+}
+
+h3 {
+  font-size: 1rem;
+  font-weight: 500;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+.num {
+  font-size: 1.5rem;
+}
+
+span {
+  font-size: 0.5rem;
+}
