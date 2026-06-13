@@ -7,7 +7,7 @@
   text-decoration: none;
   list-style: none;
   scroll-behavior: smooth;
-  outline: 1px dotted red;
+  /* outline: 1px dotted red; */
   font-family: "Poppins", sans-serif;
   font-weight: 400;
   font-style: normal;
@@ -17,6 +17,7 @@ html,
 body {
   height: 100%;
   width: 100%;
+  background-color: var(--bg);
 }
 
 html {
@@ -25,6 +26,9 @@ html {
 
 body {
   min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   color: var(--text);
   background-color: var(--bg);
   overflow: hidden;
@@ -32,14 +36,19 @@ body {
 
 :root {
   --bg: #fcf8fa;
-  --text: #000;
+  --text: #0a0407;
+  --primary: #bb5383;
+  --cta: #d5a595;
+  --accent: #cb9e7a;
 }
 
 header {
+  min-width: 100%;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 1rem 5rem;
+  padding: 20px 5rem;
+  border-bottom: 1px solid var(--text);
 }
 
 .logo {
@@ -60,33 +69,44 @@ nav {
 
 .date, .btn {
   padding: 0px 10px;
-  border: 2px solid var(--text);
+  border: 1px solid var(--accent);
   border-radius: 20px;
   font-size: 1rem;
-  box-shadow: inset 0 0 5px #55555550, inset 0 0 5px #55555550;
   p {
     font-weight: 500;
     text-transform: uppercase;
   }
 }
 
+.btn {
+  font-weight: 500;
+  text-transform: capitalize;
+  border-color: var(--cta);
+  background-color: var(--cta);
+  color: var(--bg);
+  cursor: pointer;
+}
+
 main {
+  max-width: 90%;
   display: flex;
   flex-direction: column;
-  padding: 2rem 5rem;
+  gap: 20px;
+  padding: 20px 0;
 }
 
 .container {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
   flex-wrap: wrap;
+  gap: 20px;
 }
 
-.content {
+.content, .habit {
   height: 150px;
-  width: 300px;
-  padding: 1rem;
+  min-width: 300px;
+  padding: 20px;
   border: 1px solid #000;
   border-radius: 20px;
 }
@@ -104,4 +124,8 @@ h3 {
 
 span {
   font-size: 0.5rem;
+}
+
+.habit {
+  width: 100%;
 }
