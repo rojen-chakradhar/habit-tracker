@@ -26,12 +26,9 @@ html {
 
 body {
   min-height: 100dvh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
   color: var(--text);
   background-color: var(--bg);
-  overflow: hidden;
+  overflow-x: hidden;
 }
 
 :root {
@@ -43,164 +40,137 @@ body {
 }
 
 header {
+  position: sticky;
+  top: 0;
   min-width: 100%;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 20px 5rem;
+  padding: 24px 48px;
   border-bottom: 1px solid var(--text);
+  z-index: 9;
 }
 
 .logo {
-  font-size: 18px;
+  font-family: windhavi, serif;
+  font-size: 24px;
+  font-weight: 500;
+  line-height: 1.2;
   text-transform: capitalize;
-  a {
-    font-weight: 500;
-    line-height: 1.2;
-    color: var(--text);
-  }
+  color: var(--text);
 }
 
 nav {
   display: flex;
   align-items: center;
-  gap: 50px;
+  gap: 24px;
 }
 
-.date, .btn {
-  padding: 0 10px;
+.date-pill {
+  padding: 8px 16px;
   border: 1px solid var(--accent);
-  border-radius: 20px;
-  font-size: 1rem;
-  p {
-    font-size: 16px;
-    font-weight: 500;
-    text-transform: uppercase;
-  }
+  border-radius: 24px;
+  font-size: 16px;
+  font-weight: 500;
+  text-transform: uppercase;
+  color: var(--cta);
+  background-color: var(--white);
 }
 
-.btn {
+.btn-add {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
   font-weight: 500;
   text-transform: capitalize;
-  border-color: var(--cta);
-  background-color: var(--cta);
+  border: 1px solid var(--accent);
+  border-radius: 24px;
   color: var(--bg);
+  background-color: var(--cta);
   cursor: pointer;
 }
 
 main {
-  max-width: 90%;
-  padding: 20px 0;
+  max-width: 950px;
+  margin: 0 auto;
+  padding: 48px 24px 80px;
 }
 
-.container {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-wrap: wrap;
-  column-gap: 20px;
+.summary {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-bottom: 48px;
 }
 
-.content, .habit {
-  height: 150px;
-  min-width: 300px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  padding: 20px;
+.stat-card {
+  padding: 16px 24px;
   border: 1px solid #000;
-  border-radius: 20px;
+  border-radius: 24px;
+  background-color: var(--accent);
 }
 
-h3 {
-  font-size: 18px;
-  font-weight: 500;
-  line-height: 1.2;
-  text-transform: uppercase;
-}
-
-.num {
-  font-family: windhavi, serif;
-  font-size: 48px;
-}
-
-span {
-  font-size: 16px;
-}
-
-.habits {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  margin-top: 20px;
-}
-
-.topic {
-  font-size: 18px;
-  line-height: 1.2;
+.stat-label {
+  margin-bottom: 8px;
+  font-size: 24px;
   font-weight: 500;
   text-transform: uppercase;
+  color: var(--text);
 }
 
-.habit {
-  height: max-content;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-.top {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-h2 {
-  font-size: 18px;
-  font-weight: 500;
-  text-transform: uppercase;
-}
-
-.left p {
-  font-size: 12px;
-}
-
-.right p {
+.stat-value {
   font-family: windhavi, serif;
   font-size: 48px;
   line-height: 1;
+  color: var(--primary);
 }
 
-.bottom {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.day {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-}
-
-hr {
-  height: 4px;
-  border: none;
-  border-radius: 2px;
-  background-color: var(--primary);
-}
-
-.day p {
-  align-self: center;
+.stat-sub {
+  margin-top: 4px;
   font-size: 16px;
   text-transform: capitalize;
+  color: var(--text);
 }
 
-.remove {
-  font-size: 16px;
+.section-label {
+  margin-bottom: 16px;
+  font-size: 24px;
   font-weight: 500;
   text-transform: uppercase;
-  align-self: end;
+  color: var(--text);
+}
+
+.habits-list {
+  display: flex;
+  flex-direction: column;
+  column-gap: 16px;
+}
+
+.empty-state {
+  /* display: none; */
+  padding: 64px 24px;
+  text-align: center;
+}
+
+.empty-state.visible {
+  display: block;
+}
+
+.empty-icon {
+  margin-bottom: 16px;
+  font-size: 32px;
+  color: var(--cta);
+  opacity: 0.5;
+}
+
+.empty-title {
+  margin-bottom: 8px;
+  font-size: 24px;
+  color: var(--accent);
+}
+
+.empty-sub {
+  font-size: 16px;
+  color: var(--cta);
 }
