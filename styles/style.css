@@ -13,6 +13,10 @@
   font-style: normal;
 }
 
+*:focus{
+  outline-color: var(--primary);
+}
+
 html,
 body {
   height: 100%;
@@ -47,17 +51,17 @@ header {
   align-items: center;
   justify-content: space-between;
   padding: 24px 48px;
-  border-bottom: 1px solid var(--text);
+  border-bottom: 1px solid var(--accent);
   z-index: 9;
 }
 
 .logo {
   font-family: windhavi, serif;
-  font-size: 24px;
+  font-size: 32px;
   font-weight: 500;
   line-height: 1.2;
   text-transform: capitalize;
-  color: var(--text);
+  color: var(--accent);
 }
 
 nav {
@@ -74,7 +78,7 @@ nav {
   font-weight: 500;
   text-transform: uppercase;
   color: var(--cta);
-  background-color: var(--white);
+  background-color: var(--bg);
 }
 
 .btn-add {
@@ -82,13 +86,26 @@ nav {
   align-items: center;
   gap: 8px;
   padding: 8px 16px;
+  font-size: 16px;
   font-weight: 500;
   text-transform: capitalize;
   border: 1px solid var(--accent);
   border-radius: 24px;
   color: var(--bg);
-  background-color: var(--cta);
+  background-color: var(--accent);
   cursor: pointer;
+  transition: background-color 0.5s ease, color 0.5s ease, border-color 0.5s ease;
+}
+
+.btn-add:hover, .btn-add:focus {
+  border-color: var(--cta);
+  background-color: var(--cta);
+}
+
+.btn-add:active {
+  border-color: var(--accent);
+  color: var(--accent);
+  background-color: var(--bg);
 }
 
 main {
@@ -106,9 +123,9 @@ main {
 
 .stat-card {
   padding: 16px 24px;
-  border: 1px solid #000;
+  border: 1px solid var(--accent);
   border-radius: 24px;
-  background-color: var(--accent);
+  background-color: var(--bg);
 }
 
 .stat-label {
@@ -116,12 +133,12 @@ main {
   font-size: 24px;
   font-weight: 500;
   text-transform: uppercase;
-  color: var(--text);
+  color: var(--accent);
 }
 
 .stat-value {
   font-family: windhavi, serif;
-  font-size: 48px;
+  font-size: 64px;
   line-height: 1;
   color: var(--primary);
 }
@@ -130,7 +147,7 @@ main {
   margin-top: 4px;
   font-size: 16px;
   text-transform: capitalize;
-  color: var(--text);
+  color: var(--accent);
 }
 
 .section-label {
@@ -138,7 +155,7 @@ main {
   font-size: 24px;
   font-weight: 500;
   text-transform: uppercase;
-  color: var(--text);
+  color: var(--accent);
 }
 
 .habits-list {
@@ -148,7 +165,7 @@ main {
 }
 
 .empty-state {
-  /* display: none; */
+  display: none;
   padding: 64px 24px;
   text-align: center;
 }
@@ -160,8 +177,7 @@ main {
 .empty-icon {
   margin-bottom: 16px;
   font-size: 32px;
-  color: var(--cta);
-  opacity: 0.5;
+  color: var(--accent);
 }
 
 .empty-title {
