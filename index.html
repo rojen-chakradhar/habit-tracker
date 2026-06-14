@@ -33,7 +33,7 @@
           <p class="stat-sub" id="statProgressSub">completion rate</p>
         </div>
       </div>
-      <h2 class="section-label">your habits</h2>
+      <h3 class="section-label">your habits</h3>
       <div class="habits-list"></div>
       <div class="empty-state" id="emptyState">
         <i class="ri-inbox-line empty-icon"></i>
@@ -41,6 +41,32 @@
         <p class="empty-sub">Add your first bait to start building your streak.</p>
       </div>
     </main>
+    <div class="modla-overlay" id="modalOverlay">
+      <div class="modal">
+        <h2>new habit</h2>
+        <div class="field">
+          <label>name</label>
+          <input type="text" id="habitName" placeholder="e.g. Wake Up, Morking Walk, Read...">
+        </div>
+        <div class="field">
+          <label>icon</label>
+          <div class="emoji-grid" id="emojiGrid"></div>
+        </div>
+        <div class="field">
+          <label>frequency</label>
+          <select id="habitFreq">
+            <option value="daily">daily</option>
+            <option value="weekdays">weekdays</option>
+            <option value="weekends">weekends</option>
+          </select>
+        </div>
+        <div class="modal-actions">
+          <button class="btn-cancel" id="closeModal">cancel</button>
+          <button class="btn-save" id="saveHabit">add habit</button>
+        </div>
+      </div>
+    </div>
+    <div class="toast" id="toast"></div>
     <script src="./scripts/script.js"></script>
   </body>
 </html>
