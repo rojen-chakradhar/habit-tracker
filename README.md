@@ -14,7 +14,7 @@ A small webapp to track your habit.
 - date
 
 ## view site:
-- search [https://https://habit-track-rojen.netlify.app/](https://https://habit-track-rojen.netlify.app/)
+- search [https://habit-track-rojen.netlify.app/](https://habit-track-rojen.netlify.app/)
 
 or
 
@@ -23,4 +23,4 @@ or
 - get the webapp in your device.
 
 
-i used antigravit, and claude to get make the webapp have nepali date also, but the code it gave me didnt work, but it did help me to make this work a lil.
+i used antigravity, and claude to get make the webapp have nepali date also, but the code it gave me didnt work, but it did help me to make this work a lil.
