@@ -34,6 +34,11 @@ body {
   overflow-x: hidden;
 }
 
+@font-face {
+  font-family: 'windhavi';
+  src: url('./assets/Windhavi-Regular.ttf') format('truetype');
+}
+
 :root {
   --bg: #fcf8fa;
   --text: #0a0407;
