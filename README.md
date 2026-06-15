@@ -3,6 +3,11 @@ A small webapp to track your habit.
 
 <img src="./assets/images/cover.png" alt="cover image" width="600px" height="auto">
 
+## tech stack:
+- html
+- css
+- javascript
+
 ## Functions:
 - responsive
 - minimalist
