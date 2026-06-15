@@ -220,6 +220,8 @@ main {
 .modal h2 {
   margin-bottom: 24px;
   font-size: 24px;
+  color: var(--primary);
+  text-transform: capitalize;
 }
 
 .field {
@@ -358,7 +360,7 @@ main {
 .habit-name {
   font-size: 20px;
   font-weight: 600;
-  color: var(--text);
+  color: var(--primary);
   text-transform: capitalize;
 }
 
