@@ -1,0 +1,1161 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Habit Tracker (Nepali Calendar)</title>
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet" />
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap');
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        text-decoration: none;
+        list-style: none;
+        scroll-behavior: smooth;
+        font-family: "Poppins", sans-serif;
+        font-weight: 400;
+        font-style: normal;
+      }
+
+      *:focus {
+        outline-color: var(--primary);
+      }
+
+      html,
+      body {
+        height: 100%;
+        width: 100%;
+        background-color: var(--bg);
+      }
+
+      html {
+        font-size: 16px;
+      }
+
+      body {
+        min-height: 100dvh;
+        color: var(--text);
+        background-color: var(--bg);
+        overflow-x: hidden;
+      }
+
+      :root {
+        --bg: #fcf8fa;
+        --text: #0a0407;
+        --primary: #bb5383;
+        --cta: #d5a595;
+        --accent: #cb9e7a;
+      }
+
+      header {
+        position: sticky;
+        top: 0;
+        min-width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 24px 48px;
+        border-bottom: 1px solid var(--accent);
+        background-color: var(--bg);
+        z-index: 9;
+      }
+
+      .logo {
+        font-family: windhavi, serif;
+        font-size: 32px;
+        font-weight: 500;
+        line-height: 1.2;
+        text-transform: capitalize;
+        color: var(--accent);
+      }
+
+      nav {
+        display: flex;
+        align-items: center;
+        gap: 24px;
+      }
+
+      .date-pill {
+        padding: 8px 16px;
+        border: 1px solid var(--accent);
+        border-radius: 24px;
+        font-size: 16px;
+        font-weight: 500;
+        text-transform: uppercase;
+        color: var(--cta);
+        background-color: var(--bg);
+      }
+
+      .btn-add {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 16px;
+        font-size: 16px;
+        font-weight: 500;
+        text-transform: capitalize;
+        border: 1px solid var(--accent);
+        border-radius: 24px;
+        color: var(--bg);
+        background-color: var(--accent);
+        cursor: pointer;
+        transition: background-color 0.5s ease, color 0.5s ease, border-color 0.5s ease;
+      }
+
+      .btn-add:hover, .btn-add:focus {
+        border-color: var(--cta);
+        background-color: var(--cta);
+      }
+
+      .btn-add:active {
+        border-color: var(--accent);
+        color: var(--accent);
+        background-color: var(--bg);
+      }
+
+      main {
+        max-width: 950px;
+        margin: 0 auto;
+        padding: 48px 24px 80px;
+      }
+
+      .summary {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 16px;
+        margin-bottom: 48px;
+      }
+
+      .stat-card {
+        padding: 16px 24px;
+        border: 1px solid var(--accent);
+        border-radius: 24px;
+        background-color: var(--bg);
+      }
+
+      .stat-label {
+        margin-bottom: 8px;
+        font-size: 24px;
+        font-weight: 500;
+        text-transform: uppercase;
+        color: var(--accent);
+      }
+
+      .stat-value {
+        font-family: windhavi, serif;
+        font-size: 64px;
+        line-height: 1;
+        color: var(--primary);
+      }
+
+      .stat-sub {
+        margin-top: 4px;
+        font-size: 16px;
+        text-transform: capitalize;
+        color: var(--accent);
+      }
+
+      .section-label {
+        margin-bottom: 16px;
+        font-size: 24px;
+        font-weight: 500;
+        text-transform: uppercase;
+        color: var(--accent);
+      }
+
+      .habits-list {
+        display: flex;
+        flex-direction: column;
+        column-gap: 16px;
+      }
+
+      .empty-state {
+        display: none;
+        padding: 64px 24px;
+        text-align: center;
+      }
+
+      .empty-state.visible {
+        display: block;
+      }
+
+      .empty-icon {
+        margin-bottom: 16px;
+        font-size: 32px;
+        color: var(--accent);
+      }
+
+      .empty-title {
+        margin-bottom: 8px;
+        font-size: 24px;
+        color: var(--accent);
+      }
+
+      .empty-sub {
+        font-size: 16px;
+        color: var(--cta);
+      }
+
+      .modal-overlay {
+        position: fixed;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        pointer-events: none;
+        backdrop-filter: blur(6px);
+        background-color: #0a040720;
+        z-index: 10;
+      }
+
+      .modal-overlay.open {
+        opacity: 1;
+        pointer-events: all;
+      }
+
+      .modal {
+        width: min(460px, 92vw);
+        padding: 32px;
+        border: 1px solid var(--accent);
+        border-radius: 24px;
+        background-color: var(--bg);
+      }
+
+      .modal h2 {
+        margin-bottom: 24px;
+        font-size: 24px;
+      }
+
+      .field {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        margin-bottom: 16px;
+      }
+
+      .field label {
+        font-size: 16px;
+        font-weight: 500;
+        text-transform: uppercase;
+        color: var(--accent);
+      }
+
+      .field input, .field select {
+        background-color: var(--bg);
+        border: 1px solid var(--accent);
+        border-radius: 16px;
+        padding: 8px 16px;
+        font-size: 16px;
+        font-weight: 500;
+        text-transform: uppercase;
+        color: var(--accent);
+        outline: none;
+      }
+
+      .field input:focus, .field select:focus {
+        border-color: var(--primary);
+      }
+
+      .modal-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 8px;
+        margin-top: 24px;
+      }
+
+      .btn-cancel {
+        padding: 8px 24px;
+        font-size: 16px;
+        text-transform: capitalize;
+        border: 1px solid var(--accent);
+        border-radius: 24px;
+        color: var(--accent);
+        background: transparent;
+        cursor: pointer;
+      }
+
+      .btn-save {
+        padding: 8px 24px;
+        font-size: 16px;
+        font-weight: 500;
+        text-transform: capitalize;
+        border: none;
+        border-radius: 24px;
+        color: var(--bg);
+        background: var(--accent);
+        cursor: pointer;
+      }
+
+      .toast {
+        position: fixed;
+        left: 50%;
+        bottom: 32px;
+        transform: translateX(-50%) translateY(60px);
+        background-color: var(--primary);
+        border: 1px solid var(--primary);
+        color: var(--bg);
+        font-size: 16px;
+        font-weight: 500;
+        padding: 8px 24px;
+        border-radius: 24px;
+        opacity: 0;
+        z-index: 11;
+        pointer-events: none;
+        white-space: nowrap;
+      }
+
+      .toast.show {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+      }
+
+      .habit-card {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        padding: 24px;
+        border: 1px solid var(--accent);
+        border-radius: 24px;
+        background-color: var(--bg);
+        margin-bottom: 16px;
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.3s ease;
+      }
+
+      .habit-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 24px rgba(203, 158, 122, 0.12);
+        border-color: var(--cta);
+      }
+
+      .habit-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+      }
+
+      .habit-info-group {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+      }
+
+      .habit-details {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+      }
+
+      .habit-name {
+        font-size: 20px;
+        font-weight: 600;
+        color: var(--text);
+        text-transform: capitalize;
+      }
+
+      .habit-meta {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 13px;
+        color: var(--accent);
+        text-transform: uppercase;
+        font-weight: 500;
+      }
+
+      .habit-meta-divider {
+        width: 4px;
+        height: 4px;
+        background-color: var(--accent);
+        border-radius: 50%;
+        opacity: 0.5;
+      }
+
+      .habit-streak {
+        color: var(--primary);
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        font-weight: 600;
+      }
+
+      .habit-streak i {
+        font-size: 14px;
+      }
+
+      .habit-actions {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .btn-delete {
+        background: transparent;
+        border: none;
+        color: var(--accent);
+        font-size: 20px;
+        cursor: pointer;
+        padding: 6px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s ease;
+      }
+
+      .btn-delete:hover {
+        color: #d32f2f;
+        background-color: rgba(211, 47, 47, 0.08);
+      }
+
+      .habit-history {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 12px;
+        border-top: 1px dashed rgba(203, 158, 122, 0.3);
+        padding-top: 20px;
+      }
+
+      .history-day {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .day-label {
+        font-size: 11px;
+        font-weight: 600;
+        text-transform: uppercase;
+        color: var(--accent);
+        letter-spacing: 0.5px;
+      }
+
+      .day-bubble {
+        width: 100%;
+        max-width: 44px;
+        aspect-ratio: 1;
+        height: auto;
+        border-radius: 50%;
+        border: 2px solid var(--accent);
+        background-color: transparent;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        color: var(--accent);
+        font-weight: 600;
+        font-size: 13px;
+      }
+
+      .day-bubble:hover {
+        transform: scale(1.08);
+        border-color: var(--primary);
+        color: var(--primary);
+      }
+
+      .day-bubble.completed {
+        background-color: var(--primary);
+        border-color: var(--primary);
+        color: var(--bg);
+        box-shadow: 0 4px 12px rgba(187, 83, 131, 0.2);
+      }
+
+      .day-bubble.not-scheduled {
+        border-style: dashed;
+        opacity: 0.5;
+      }
+
+      .day-bubble.not-scheduled:hover {
+        border-style: solid;
+        opacity: 0.9;
+      }
+
+      .day-date {
+        font-size: 10px;
+        color: var(--accent);
+        opacity: 0.7;
+      }
+
+      .day-selector {
+        display: flex;
+        justify-content: space-between;
+        gap: 8px;
+        margin-top: 4px;
+      }
+
+      .day-select-btn {
+        width: 100%;
+        aspect-ratio: 1;
+        max-width: 40px;
+        border-radius: 50%;
+        border: 1px solid rgba(203, 158, 122, 0.4);
+        background-color: rgba(203, 158, 122, 0.04);
+        color: var(--accent);
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        user-select: none;
+        opacity: 0.7;
+      }
+
+      .day-select-btn:hover {
+        background-color: rgba(213, 165, 149, 0.15);
+        border-color: var(--cta);
+        color: var(--cta);
+        opacity: 1;
+        transform: scale(1.05);
+      }
+
+      .day-select-btn.selected {
+        background-color: var(--primary);
+        border-color: var(--primary);
+        color: var(--bg);
+        opacity: 1;
+        box-shadow: 0 4px 10px rgba(187, 83, 131, 0.35);
+        transform: scale(1.05);
+      }
+
+      .day-bubble.disabled {
+        opacity: 0.3;
+        pointer-events: none;
+        cursor: default;
+      }
+
+      @media (max-width: 800px) {
+        .summary {
+          grid-template-columns: repeat(3, 1fr);
+          gap: 12px;
+          margin-bottom: 36px;
+        }
+        .stat-card {
+          padding: 12px 16px;
+        }
+        .stat-label {
+          font-size: 18px;
+          margin-bottom: 4px;
+        }
+        .stat-value {
+          font-size: 44px;
+        }
+        .stat-sub {
+          font-size: 14px;
+        }
+        .day-bubble {
+          max-width: 38px;
+          font-size: 12px;
+        }
+        .logo {
+          font-size: 32px;
+        }
+        .date-pill {
+          font-size: 16px;
+          padding: 6px 12px;
+        }
+        .btn-add {
+          font-size: 16px;
+          padding: 6px 12px;
+        }
+      }
+
+      @media (max-width: 600px) {
+        header {
+          padding: 16px 24px;
+        }
+        .logo {
+          font-size: 24px;
+        }
+        .date-pill {
+          font-size: 14px;
+          padding: 6px 12px;
+        }
+        .btn-add {
+          font-size: 14px;
+          padding: 6px 12px;
+        }
+        main {
+          padding: 24px 16px 60px;
+        }
+        .summary {
+          grid-template-columns: 1fr;
+          gap: 12px;
+          margin-bottom: 28px;
+        }
+        .stat-card {
+          padding: 16px;
+          border-radius: 20px;
+        }
+        .stat-value {
+          font-size: 48px;
+        }
+        .section-label {
+          font-size: 20px;
+          margin-bottom: 12px;
+        }
+        .habit-card {
+          padding: 16px;
+          border-radius: 20px;
+          gap: 16px;
+        }
+        .habit-name {
+          font-size: 18px;
+        }
+        .habit-history {
+          gap: 6px;
+          padding-top: 16px;
+        }
+        .day-label {
+          font-size: 10px;
+        }
+        .day-bubble {
+          max-width: 34px;
+          font-size: 11px;
+        }
+        .day-date {
+          font-size: 9px;
+        }
+        .modal {
+          padding: 20px;
+          border-radius: 20px;
+        }
+        .modal h2 {
+          font-size: 20px;
+          margin-bottom: 16px;
+        }
+      }
+
+      @media (max-width: 380px) {
+        header {
+          padding: 12px 16px;
+        }
+        .logo {
+          font-size: 16px;
+        }
+        .date-pill {
+          font-size: 8px;
+          padding: 6px 12px;
+        }
+        .btn-add {
+          font-size: 8px;
+          padding: 6px 12px;
+        }
+        nav {
+          gap: 12px;
+        }
+        .habit-history {
+          gap: 4px;
+        }
+        .day-bubble {
+          max-width: 28px;
+          font-size: 10px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <a href="nepali-index.html"><h1 class="logo">habit tracker</h1></a>
+      <nav>
+        <div class="date-pill" id="datePill">...</div>
+        <button class="btn-add" id="openModal"><i class="ri-add-line"></i> new habit</button>
+      </nav>
+    </header>
+    <main>
+      <div class="summary">
+        <div class="stat-card">
+          <h3 class="stat-label">today's progress</h3>
+          <p class="stat-value" id="statTodayProgress">0/0</p>
+          <p class="stat-sub" id="statTodaySub">habits completed</p>
+        </div>
+        <div class="stat-card">
+          <h3 class="stat-label">best streak</h3>
+          <p class="stat-value" id="statBestStreak">0</p>
+          <p class="stat-sub" id="statBestSub">days in a row</p>
+        </div>
+        <div class="stat-card">
+          <h3 class="stat-label">weekly rate</h3>
+          <p class="stat-value" id="statWeeklyRate">0%</p>
+          <p class="stat-sub" id="statWeeklySub">completion rate</p>
+        </div>
+      </div>
+      <h3 class="section-label">your habits</h3>
+      <div class="habits-list"></div>
+      <div class="empty-state" id="emptyState">
+        <i class="ri-inbox-line empty-icon"></i>
+        <p class="empty-title">nothing tracked yet</p>
+        <p class="empty-sub">Add your first habit to start building your streak.</p>
+      </div>
+    </main>
+    <div class="modal-overlay" id="modalOverlay">
+      <div class="modal">
+        <h2>new habit</h2>
+        <div class="field">
+          <label>name</label>
+          <input type="text" id="habitName" placeholder="e.g. Wake Up, Morning Walk, Read...">
+        </div>
+        <div class="field">
+          <label>track on</label>
+          <div class="day-selector" id="daySelector">
+            <button type="button" class="day-select-btn selected" data-day="0" title="Aitabar (Sunday)">S</button>
+            <button type="button" class="day-select-btn selected" data-day="1" title="Sombar (Monday)">M</button>
+            <button type="button" class="day-select-btn selected" data-day="2" title="Mangalbar (Tuesday)">T</button>
+            <button type="button" class="day-select-btn selected" data-day="3" title="Budhabar (Wednesday)">W</button>
+            <button type="button" class="day-select-btn selected" data-day="4" title="Bihibar (Thursday)">T</button>
+            <button type="button" class="day-select-btn selected" data-day="5" title="Sukrabar (Friday)">F</button>
+            <button type="button" class="day-select-btn selected" data-day="6" title="Sanibar (Saturday)">S</button>
+          </div>
+        </div>
+        <div class="modal-actions">
+          <button class="btn-cancel" id="closeModal">cancel</button>
+          <button class="btn-save" id="saveHabit">add habit</button>
+        </div>
+      </div>
+    </div>
+    <div class="toast" id="toast"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/nepali-date-converter/dist/nepali-date-converter.umd.js"></script>
+    <script>
+      let habits = JSON.parse(localStorage.getItem('nepali_habits') || '[]');
+      let toastTimeout;
+
+      const datePill = document.getElementById('datePill');
+      const openModalBtn = document.getElementById('openModal');
+      const closeModalBtn = document.getElementById('closeModal');
+      const saveHabitBtn = document.getElementById('saveHabit');
+      const modalOverlay = document.getElementById('modalOverlay');
+      const habitNameInput = document.getElementById('habitName');
+      const habitsListContainer = document.querySelector('.habits-list');
+      const emptyState = document.getElementById('emptyState');
+      const toast = document.getElementById('toast');
+
+      const statTodayProgress = document.getElementById('statTodayProgress');
+      const statBestStreak = document.getElementById('statBestStreak');
+      const statWeeklyRate = document.getElementById('statWeeklyRate');
+
+      function save() {
+        localStorage.setItem('nepali_habits', JSON.stringify(habits));
+      }
+
+      function getNepaliYMD(jsDate = new Date()) {
+        const nd = new NepaliDate(jsDate);
+        return nd.format('YYYY-MM-DD');
+      }
+
+      function formatPillDate() {
+        const nd = new NepaliDate();
+        return nd.format('ddd, DD MMMM YYYY').toLowerCase();
+      }
+
+      function getCurrentWeekDays() {
+        const list = [];
+        const days = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
+        const today = new Date();
+        const currentDayOfWeek = today.getDay();
+        const todayNepaliStr = getNepaliYMD(today);
+        
+        for (let i = 0; i < 7; i++) {
+          const d = new Date(today);
+          d.setDate(today.getDate() - currentDayOfWeek + i);
+          
+          const nd = new NepaliDate(d);
+          const dateStr = nd.format('YYYY-MM-DD');
+          
+          list.push({
+            dateStr: dateStr,
+            dayLabel: days[d.getDay()],
+            dateNum: nd.getDate(),
+            dayOfWeek: d.getDay(),
+            isFuture: dateStr > todayNepaliStr
+          });
+        }
+        return list;
+      }
+
+      function isHabitScheduled(habit, dayOfWeek) {
+        if (habit.trackingDays) {
+          return habit.trackingDays.includes(dayOfWeek);
+        }
+        return true;
+      }
+
+      function getFrequencyLabel(trackingDays) {
+        if (!trackingDays || trackingDays.length === 0) return 'no days';
+        if (trackingDays.length === 7) return 'daily';
+        
+        const weekdays = [1, 2, 3, 4, 5];
+        const weekends = [0, 6];
+        
+        const hasAllWeekdays = weekdays.every(d => trackingDays.includes(d)) && weekdays.length === trackingDays.length;
+        if (hasAllWeekdays) return 'weekdays';
+        
+        const hasAllWeekends = weekends.every(d => trackingDays.includes(d)) && weekends.length === trackingDays.length;
+        if (hasAllWeekends) return 'weekends';
+        
+        const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+        const sortedDays = [...trackingDays].sort((a, b) => a - b);
+        return sortedDays.map(d => dayNames[d]).join(', ');
+      }
+
+      function showToast(message) {
+        clearTimeout(toastTimeout);
+        toast.textContent = message;
+        toast.classList.add('show');
+        toastTimeout = setTimeout(() => {
+          toast.classList.remove('show');
+        }, 2500);
+      }
+
+      function getHabitStreak(habit) {
+        const history = new Set(habit.history || []);
+        if (history.size === 0) return 0;
+
+        let streak = 0;
+        let checkDate = new Date();
+        const todayStr = getNepaliYMD(checkDate);
+        
+        let yesterday = new Date();
+        yesterday.setDate(yesterday.getDate() - 1);
+        const yesterdayStr = getNepaliYMD(yesterday);
+
+        if (!history.has(todayStr) && !history.has(yesterdayStr)) {
+          return 0;
+        }
+
+        let startCheck = history.has(todayStr) ? checkDate : yesterday;
+
+        while (true) {
+          const checkStr = getNepaliYMD(startCheck);
+          
+          if (history.has(checkStr)) {
+            streak++;
+          } else {
+            const dayOfWeek = startCheck.getDay();
+            if (isHabitScheduled(habit, dayOfWeek)) {
+              break;
+            }
+          }
+          
+          startCheck.setDate(startCheck.getDate() - 1);
+          if (streak > 3650) break;
+        }
+
+        return streak;
+      }
+
+      function updateStats() {
+        const todayStr = getNepaliYMD();
+        const todayDayOfWeek = new Date().getDay();
+        
+        let activeCount = 0;
+        let completedCount = 0;
+        
+        habits.forEach(habit => {
+          if (isHabitScheduled(habit, todayDayOfWeek)) {
+            activeCount++;
+            if (habit.history.includes(todayStr)) {
+              completedCount++;
+            }
+          }
+        });
+        
+        statTodayProgress.textContent = `${completedCount}/${activeCount}`;
+        
+        let bestStreak = 0;
+        habits.forEach(habit => {
+          const streak = getHabitStreak(habit);
+          if (streak > bestStreak) {
+            bestStreak = streak;
+          }
+        });
+        
+        statBestStreak.textContent = bestStreak;
+        
+        const currentWeek = getCurrentWeekDays();
+        let totalScheduledOccurrences = 0;
+        let totalCompletions = 0;
+        
+        habits.forEach(habit => {
+          const historySet = new Set(habit.history || []);
+          currentWeek.forEach(day => {
+            if (!day.isFuture && isHabitScheduled(habit, day.dayOfWeek)) {
+              totalScheduledOccurrences++;
+              if (historySet.has(day.dateStr)) {
+                totalCompletions++;
+              }
+            }
+          });
+        });
+        
+        const weeklyRate = totalScheduledOccurrences > 0 
+          ? Math.round((totalCompletions / totalScheduledOccurrences) * 100) 
+          : 0;
+          
+        statWeeklyRate.textContent = `${weeklyRate}%`;
+      }
+
+      function toggleHabitDay(habitId, dateStr) {
+        const habit = habits.find(h => h.id === habitId);
+        if (!habit) return;
+        
+        const index = habit.history.indexOf(dateStr);
+        const todayStr = getNepaliYMD();
+        
+        if (index > -1) {
+          habit.history.splice(index, 1);
+          save();
+          updateStats();
+          renderHabits();
+          if (dateStr === todayStr) {
+            showToast(`Marked "${habit.name}" incomplete for today.`);
+          }
+        } else {
+          habit.history.push(dateStr);
+          save();
+          updateStats();
+          renderHabits();
+          
+          if (dateStr === todayStr) {
+            const currentStreak = getHabitStreak(habit);
+            if (currentStreak > 0) {
+              showToast(`Keep it up! "${habit.name}" completed! Streak: ${currentStreak} days 🔥`);
+            } else {
+              showToast(`"${habit.name}" completed!`);
+            }
+          } else {
+            showToast(`Updated history for "${habit.name}".`);
+          }
+        }
+      }
+
+      function deleteHabit(habitId) {
+        const habitIndex = habits.findIndex(h => h.id === habitId);
+        if (habitIndex === -1) return;
+        
+        const habitName = habits[habitIndex].name;
+        
+        if (confirm(`Are you sure you want to delete "${habitName}"?`)) {
+          habits.splice(habitIndex, 1);
+          save();
+          updateStats();
+          renderHabits();
+          showToast(`"${habitName}" was deleted.`);
+        }
+      }
+
+      function renderHabits() {
+        habitsListContainer.innerHTML = '';
+        
+        if (habits.length === 0) {
+          emptyState.classList.add('visible');
+          return;
+        }
+        
+        emptyState.classList.remove('visible');
+        const currentWeek = getCurrentWeekDays();
+        
+        habits.forEach(habit => {
+          const streak = getHabitStreak(habit);
+          const card = document.createElement('div');
+          card.className = 'habit-card';
+          
+          const header = document.createElement('div');
+          header.className = 'habit-header';
+          
+          const infoGroup = document.createElement('div');
+          infoGroup.className = 'habit-info-group';
+          
+          const details = document.createElement('div');
+          details.className = 'habit-details';
+          
+          const name = document.createElement('div');
+          name.className = 'habit-name';
+          name.textContent = habit.name;
+          
+          const meta = document.createElement('div');
+          meta.className = 'habit-meta';
+          
+          const freqSpan = document.createElement('span');
+          const trackingDays = habit.trackingDays || [0,1,2,3,4,5,6];
+          freqSpan.textContent = getFrequencyLabel(trackingDays);
+          meta.appendChild(freqSpan);
+          
+          if (streak > 0) {
+            const divider = document.createElement('div');
+            divider.className = 'habit-meta-divider';
+            meta.appendChild(divider);
+            
+            const streakSpan = document.createElement('span');
+            streakSpan.className = 'habit-streak';
+            streakSpan.innerHTML = `<i class="ri-fire-line"></i> ${streak}d streak`;
+            meta.appendChild(streakSpan);
+          }
+          
+          details.appendChild(name);
+          details.appendChild(meta);
+          infoGroup.appendChild(details);
+          
+          const actions = document.createElement('div');
+          actions.className = 'habit-actions';
+          
+          const deleteBtn = document.createElement('button');
+          deleteBtn.className = 'btn-delete';
+          deleteBtn.title = 'Delete Habit';
+          deleteBtn.innerHTML = '<i class="ri-delete-bin-line"></i>';
+          deleteBtn.addEventListener('click', () => deleteHabit(habit.id));
+          
+          actions.appendChild(deleteBtn);
+          header.appendChild(infoGroup);
+          header.appendChild(actions);
+          card.appendChild(header);
+          
+          const historyGrid = document.createElement('div');
+          historyGrid.className = 'habit-history';
+          
+          currentWeek.forEach(day => {
+            const isCompleted = habit.history.includes(day.dateStr);
+            const isScheduled = isHabitScheduled(habit, day.dayOfWeek);
+            
+            const dayCol = document.createElement('div');
+            dayCol.className = 'history-day';
+            
+            const label = document.createElement('div');
+            label.className = 'day-label';
+            label.textContent = day.dayLabel;
+            
+            const bubble = document.createElement('div');
+            bubble.className = 'day-bubble';
+            bubble.textContent = day.dateNum;
+            
+            if (isCompleted) {
+              bubble.classList.add('completed');
+            }
+            
+            if (day.isFuture) {
+              bubble.classList.add('disabled');
+              bubble.title = 'Future day';
+            } else if (!isScheduled) {
+              bubble.classList.add('not-scheduled');
+              bubble.title = 'Not scheduled for this day';
+            } else {
+              bubble.title = isCompleted ? 'Completed' : 'Mark complete';
+            }
+            
+            if (!day.isFuture) {
+              bubble.addEventListener('click', () => {
+                toggleHabitDay(habit.id, day.dateStr);
+              });
+            }
+            
+            const dateText = document.createElement('div');
+            dateText.className = 'day-date';
+            
+            if (day.dateStr === getNepaliYMD()) {
+              label.style.color = 'var(--primary)';
+              label.style.fontWeight = 'bold';
+              dateText.textContent = 'today';
+              dateText.style.color = 'var(--primary)';
+              dateText.style.fontWeight = '600';
+            } else {
+              dateText.textContent = day.dateStr.slice(5);
+            }
+            
+            dayCol.appendChild(label);
+            dayCol.appendChild(bubble);
+            dayCol.appendChild(dateText);
+            historyGrid.appendChild(dayCol);
+          });
+          
+          card.appendChild(historyGrid);
+          habitsListContainer.appendChild(card);
+        });
+      }
+
+      openModalBtn.addEventListener('click', () => {
+        habitNameInput.value = '';
+        document.querySelectorAll('.day-select-btn').forEach(btn => btn.classList.add('selected'));
+        modalOverlay.classList.add('open');
+        setTimeout(() => habitNameInput.focus(), 150);
+      });
+
+      closeModalBtn.addEventListener('click', () => {
+        modalOverlay.classList.remove('open');
+      });
+
+      modalOverlay.addEventListener('click', (e) => {
+        if (e.target === modalOverlay) {
+          modalOverlay.classList.remove('open');
+        }
+      });
+
+      saveHabitBtn.addEventListener('click', () => {
+        const name = habitNameInput.value.trim();
+        
+        if (!name) {
+          showToast('Please enter a habit name!');
+          habitNameInput.focus();
+          return;
+        }
+        
+        const selectedDays = Array.from(document.querySelectorAll('.day-select-btn.selected'))
+          .map(btn => parseInt(btn.dataset.day));
+          
+        if (selectedDays.length === 0) {
+          showToast('Please select at least one day to track!');
+          return;
+        }
+        
+        const newHabit = {
+          id: 'habit_' + Date.now(),
+          name: name,
+          trackingDays: selectedDays,
+          history: [],
+          createdAt: new Date().toISOString()
+        };
+        
+        habits.push(newHabit);
+        save();
+        updateStats();
+        renderHabits();
+        modalOverlay.classList.remove('open');
+        showToast(`"${name}" added successfully! ✨`);
+      });
+
+      habitNameInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          saveHabitBtn.click();
+        }
+      });
+
+      function init() {
+        if (typeof NepaliDate === 'undefined') {
+          showToast('Loading Nepali calendar library...');
+          setTimeout(init, 500);
+          return;
+        }
+
+        datePill.textContent = formatPillDate();
+        
+        const daySelectBtns = document.querySelectorAll('.day-select-btn');
+        daySelectBtns.forEach(btn => {
+          btn.addEventListener('click', () => {
+            btn.classList.toggle('selected');
+          });
+        });
+        
+        updateStats();
+        renderHabits();
+      }
+
+      window.addEventListener('DOMContentLoaded', init);
+    </script>
+  </body>
+</html>
