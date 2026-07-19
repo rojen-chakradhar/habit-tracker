@@ -1,22 +1,12 @@
+// Unified script: base app + badges + confetti
 let habits = JSON.parse(localStorage.getItem('habits') || '[]');
-let toastTimeout;
-
-const datePill = document.getElementById('datePill');
-const openModalBtn = document.getElementById('openModal');
-const closeModalBtn = document.getElementById('closeModal');
-const saveHabitBtn = document.getElementById('saveHabit');
-const modalOverlay = document.getElementById('modalOverlay');
-const habitNameInput = document.getElementById('habitName');
-const habitsListContainer = document.querySelector('.habits-list');
-const emptyState = document.getElementById('emptyState');
-const toast = document.getElementById('toast');
-
-const statTodayProgress = document.getElementById('statTodayProgress');
-const statBestStreak = document.getElementById('statBestStreak');
-const statWeeklyRate = document.getElementById('statWeeklyRate');
+let badges = JSON.parse(localStorage.getItem('badges') || '[]');
 
 function save() {
   localStorage.setItem('habits', JSON.stringify(habits));
+}
+function saveBadges() {
+  localStorage.setItem('badges', JSON.stringify(badges));
 }
 
 function getLocalYMD(date = new Date()) {
@@ -83,11 +73,13 @@ function getFrequencyLabel(trackingDays) {
 }
 
 function showToast(message) {
-  clearTimeout(toastTimeout);
-  toast.textContent = message;
-  toast.classList.add('show');
-  toastTimeout = setTimeout(() => {
-    toast.classList.remove('show');
+  clearTimeout(window._toastTimeout);
+  const toastEl = document.getElementById('toast');
+  if (!toastEl) return;
+  toastEl.textContent = message;
+  toastEl.classList.add('show');
+  window._toastTimeout = setTimeout(() => {
+    toastEl.classList.remove('show');
   }, 2500);
 }
 
@@ -138,13 +130,16 @@ function updateStats() {
   habits.forEach(habit => {
     if (isHabitScheduled(habit, todayDayOfWeek)) {
       activeCount++;
-      if (habit.history.includes(todayStr)) {
+      if ((habit.history || []).includes(todayStr)) {
         completedCount++;
       }
     }
   });
   
-  statTodayProgress.textContent = `${completedCount}/${activeCount}`;
+  const statToday = document.getElementById('stat-Progress') || document.getElementById('statTodayProgress');
+  const statBest = document.getElementById('statBestStreak');
+  const statWeekly = document.getElementById('statWeeklyRate');
+  if (statToday) statToday.textContent = `${completedCount}/${activeCount}`;
   
   let bestStreak = 0;
   habits.forEach(habit => {
@@ -154,7 +149,7 @@ function updateStats() {
     }
   });
   
-  statBestStreak.textContent = bestStreak;
+  if (statBest) statBest.textContent = bestStreak;
   
   const currentWeek = getCurrentWeekDays();
   let totalScheduledOccurrences = 0;
@@ -176,14 +171,14 @@ function updateStats() {
     ? Math.round((totalCompletions / totalScheduledOccurrences) * 100) 
     : 0;
     
-  statWeeklyRate.textContent = `${weeklyRate}%`;
+  if (statWeekly) statWeekly.textContent = `${weeklyRate}%`;
 }
 
 function toggleHabitDay(habitId, dateStr) {
   const habit = habits.find(h => h.id === habitId);
   if (!habit) return;
   
-  const index = habit.history.indexOf(dateStr);
+  const index = (habit.history || []).indexOf(dateStr);
   const todayStr = getLocalYMD();
   
   if (index > -1) {
@@ -195,6 +190,7 @@ function toggleHabitDay(habitId, dateStr) {
       showToast(`Marked "${habit.name}" incomplete for today.`);
     }
   } else {
+    habit.history = habit.history || [];
     habit.history.push(dateStr);
     save();
     updateStats();
@@ -228,15 +224,31 @@ function deleteHabit(habitId) {
   }
 }
 
+function updateEmptyState() {
+  const empty = document.getElementById('emptyState');
+  const list = document.querySelector('.habits-list');
+  if (!empty || !list) return;
+  if (habits.length === 0) {
+    empty.classList.add('visible');
+    list.style.display = 'none';
+  } else {
+    empty.classList.remove('visible');
+    list.style.display = 'flex';
+    renderHabits();
+  }
+}
+
 function renderHabits() {
+  const habitsListContainer = document.querySelector('.habits-list');
+  const emptyState = document.getElementById('emptyState');
   habitsListContainer.innerHTML = '';
   
   if (habits.length === 0) {
-    emptyState.classList.add('visible');
+    if (emptyState) emptyState.classList.add('visible');
     return;
   }
   
-  emptyState.classList.remove('visible');
+  if (emptyState) emptyState.classList.remove('visible');
   const currentWeek = getCurrentWeekDays();
   
   habits.forEach(habit => {
@@ -272,7 +284,7 @@ function renderHabits() {
       
       const streakSpan = document.createElement('span');
       streakSpan.className = 'habit-streak';
-      streakSpan.innerHTML = `<i class="ri-fire-line"></i> ${streak}d streak`;
+      streakSpan.innerHTML = `<i class=\"ri-fire-line\"></i> ${streak}d streak`;
       meta.appendChild(streakSpan);
     }
     
@@ -298,7 +310,7 @@ function renderHabits() {
     historyGrid.className = 'habit-history';
     
     currentWeek.forEach(day => {
-      const isCompleted = habit.history.includes(day.dateStr);
+      const isCompleted = (habit.history || []).includes(day.dateStr);
       const isScheduled = isHabitScheduled(habit, day.dayOfWeek);
       
       const dayCol = document.createElement('div');
@@ -356,74 +368,196 @@ function renderHabits() {
   });
 }
 
-openModalBtn.addEventListener('click', () => {
-  habitNameInput.value = '';
-  document.querySelectorAll('.day-select-btn').forEach(btn => btn.classList.add('selected'));
-  modalOverlay.classList.add('open');
-  setTimeout(() => habitNameInput.focus(), 150);
-});
+// small utilities / UI data
+function todayKey() { return getLocalYMD(); }
 
-closeModalBtn.addEventListener('click', () => {
-  modalOverlay.classList.remove('open');
-});
+const quotes = [
+  "Build something small today — consistency beats intensity.",
+  "Ship, learn, iterate. The smallest step is still progress.",
+  "Make this week count: one habit at a time.",
+  "Be kind to your future self — start a streak.",
+  "Creativity loves constraints. Try a tiny challenge today."
+];
 
-modalOverlay.addEventListener('click', (e) => {
-  if (e.target === modalOverlay) {
-    modalOverlay.classList.remove('open');
-  }
-});
+const suggestions = [
+  'Read 10 pages',
+  '15-min walk',
+  '30-min coding',
+  'Cold shower',
+  '5-minute journaling'
+];
 
-saveHabitBtn.addEventListener('click', () => {
-  const name = habitNameInput.value.trim();
-  
-  if (!name) {
-    showToast('Please enter a habit name!');
-    habitNameInput.focus();
-    return;
-  }
-  
-  const selectedDays = Array.from(document.querySelectorAll('.day-select-btn.selected'))
-    .map(btn => parseInt(btn.dataset.day));
-    
-  if (selectedDays.length === 0) {
-    showToast('Please select at least one day to track!');
-    return;
-  }
-  
-  const newHabit = {
+const allBadges = [
+  { id: 'first', name: 'First Habit', desc: 'Added your first habit', icon: '🏅' },
+  { id: 'collector', name: 'Habit Collector', desc: 'Added 5 habits', icon: '🎖️' }
+];
+
+function pickRandom(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+
+function awardBadge(b) {
+  if (badges.find(x => x.id === b.id)) return false;
+  const earned = { ...b, earnedAt: new Date().toISOString() };
+  badges.push(earned);
+  saveBadges();
+  renderBadges();
+  showToast(`Badge earned: ${b.name}`);
+  launchConfetti();
+  return true;
+}
+
+function awardBadgeIfNeeded() {
+  if (habits.length === 1) awardBadge(allBadges.find(b => b.id === 'first'));
+  if (habits.length === 5) awardBadge(allBadges.find(b => b.id === 'collector'));
+}
+
+function renderBadges() {
+  const container = document.getElementById('badgesList');
+  if (!container) return;
+  container.innerHTML = '';
+  allBadges.forEach(b => {
+    const owned = !!badges.find(x => x.id === b.id);
+    const el = document.createElement('div');
+    el.className = 'badge-card' + (owned ? '' : ' locked');
+    el.innerHTML = `
+      <div class="badge-icon">${b.icon}</div>
+      <div>
+        <div class="badge-name">${b.name}</div>
+        <div class="badge-desc">${b.desc}</div>
+      </div>
+    `;
+    container.appendChild(el);
+  });
+}
+
+function addHabit(name, opts = {}) {
+  if (!name || !name.trim()) return;
+  const habit = {
     id: 'habit_' + Date.now(),
-    name: name,
-    trackingDays: selectedDays,
+    name: name.trim(),
+    trackingDays: opts.trackingDays || (opts.freq ? (opts.freq === 'weekdays' ? [1,2,3,4,5] : (opts.freq === 'weekends' ? [0,6] : [0,1,2,3,4,5,6])) : [0,1,2,3,4,5,6]),
     history: [],
     createdAt: new Date().toISOString()
   };
-  
-  habits.push(newHabit);
+  habits.push(habit);
   save();
   updateStats();
   renderHabits();
-  modalOverlay.classList.remove('open');
-  showToast(`"${name}" added successfully! ✨`);
-});
+  showToast(`Added "${habit.name}"`);
+  awardBadgeIfNeeded();
+}
 
-habitNameInput.addEventListener('keydown', (e) => {
-  if (e.key === 'Enter') {
-    saveHabitBtn.click();
+function initSuggestions() {
+  const container = document.getElementById('suggestions');
+  if (!container) return;
+  container.innerHTML = '';
+  suggestions.forEach(s => {
+    const btn = document.createElement('button');
+    btn.className = 'suggest-btn';
+    btn.type = 'button';
+    btn.textContent = s;
+    btn.addEventListener('click', () => addHabit(s));
+    container.appendChild(btn);
+  });
+}
+
+// --- lightweight confetti ---
+function launchConfetti() {
+  const canvas = document.getElementById('confettiCanvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  function fit() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+  fit();
+  window.addEventListener('resize', fit);
+
+  const colors = ['#f94144', '#f3722c', '#f8961e', '#90be6d', '#577590', '#4d908e', '#277da1'];
+  const particles = [];
+  const count = 80;
+  const now = Date.now();
+  const duration = 1600;
+
+  for (let i = 0; i < count; i++) {
+    particles.push({
+      x: Math.random() * canvas.width,
+      y: -10 - Math.random() * 200,
+      vx: (Math.random() - 0.5) * 6,
+      vy: Math.random() * 6 + 2,
+      r: Math.random() * 8 + 4,
+      color: colors[Math.floor(Math.random() * colors.length)],
+      rot: Math.random() * Math.PI * 2,
+      vr: (Math.random() - 0.5) * 0.3
+    });
   }
-});
+
+  function draw() {
+    const t = Date.now();
+    const dt = t - now;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    particles.forEach(p => {
+      p.x += p.vx;
+      p.y += p.vy + 0.5 * (dt / duration);
+      p.vy += 0.02;
+      p.rot += p.vr;
+      ctx.save();
+      ctx.translate(p.x, p.y);
+      ctx.rotate(p.rot);
+      ctx.fillStyle = p.color;
+      ctx.fillRect(-p.r/2, -p.r/2, p.r, p.r * 0.6);
+      ctx.restore();
+    });
+
+    if (dt < duration) {
+      requestAnimationFrame(draw);
+    } else {
+      setTimeout(() => ctx.clearRect(0, 0, canvas.width, canvas.height), 200);
+      window.removeEventListener('resize', fit);
+    }
+  }
+  requestAnimationFrame(draw);
+}
 
 function init() {
-  datePill.textContent = formatPillDate();
-  
-  const daySelectBtns = document.querySelectorAll('.day-select-btn');
-  daySelectBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
-      btn.classList.toggle('selected');
+  const dp = document.getElementById('datePill');
+  if (dp) dp.textContent = formatPillDate();
+
+  const dq = document.getElementById('dailyQuote');
+  if (dq) dq.textContent = pickRandom(quotes);
+
+  renderBadges();
+  initSuggestions();
+
+  const open = document.getElementById('openModal');
+  const overlay = document.getElementById('modalOverlay');
+  const close = document.getElementById('closeModal');
+  const saveBtn = document.getElementById('saveHabit');
+  const input = document.getElementById('habitName');
+
+  if (open && overlay) {
+    open.addEventListener('click', () => overlay.classList.add('open'));
+  }
+  if (close && overlay) {
+    close.addEventListener('click', () => overlay.classList.remove('open'));
+  }
+  if (saveBtn && input && overlay) {
+    saveBtn.addEventListener('click', () => {
+      const name = input.value || '';
+      if (name.trim()) {
+        const selected = Array.from(document.querySelectorAll('.day-select-btn.selected')).map(b => parseInt(b.dataset.day));
+        if (selected && selected.length > 0) {
+          addHabit(name, { trackingDays: selected });
+        } else {
+          addHabit(name);
+        }
+        input.value = '';
+        overlay.classList.remove('open');
+      } else {
+        showToast('Please enter a habit name');
+      }
     });
-  });
-  
+  }
+
   updateStats();
   renderHabits();
+  renderBadges();
 }
 
 window.addEventListener('DOMContentLoaded', init);

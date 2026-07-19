@@ -259,6 +259,61 @@ main {
   font-size: 14px;
 }
 
+/* badges */
+.badges {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.badge-card {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  border-radius: 12px;
+  border: 1px dashed transparent;
+  background: transparent;
+  color: var(--accent);
+}
+
+.badge-card.locked {
+  opacity: 0.45;
+}
+
+.badge-icon {
+  width: 40px;
+  height: 40px;
+  display: inline-grid;
+  place-items: center;
+  font-size: 20px;
+  border-radius: 10px;
+  background: linear-gradient(180deg, #fff 0%, #fff9f9 100%);
+  border: 1px solid var(--accent);
+}
+
+.badge-name {
+  font-weight: 600;
+  color: var(--primary);
+}
+
+.badge-desc {
+  font-size: 13px;
+  color: var(--cta);
+}
+
+/* confetti canvas */
+#confettiCanvas {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 9999;
+}
+
 /* modal overlay (kept after discover styles) */
 .modal-overlay {
   position: fixed;
