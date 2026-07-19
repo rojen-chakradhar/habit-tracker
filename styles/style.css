@@ -86,7 +86,7 @@ nav {
   background-color: var(--bg);
 }
 
-.btn-add {
+.btn-add, .btn-help {
   display: flex;
   align-items: center;
   gap: 8px;
@@ -102,12 +102,20 @@ nav {
   transition: background-color 0.5s ease, color 0.5s ease, border-color 0.5s ease;
 }
 
-.btn-add:hover, .btn-add:focus {
+.btn-help {
+  position: fixed;
+  bottom: 10px;
+  right: 10px;
+  padding: 4px 8px;
+  font-size: 12px;
+}
+
+.btn-add:hover, .btn-add:focus, .btn-help:hover, .btn-help:focus  {
   border-color: var(--cta);
   background-color: var(--cta);
 }
 
-.btn-add:active {
+.btn-add:active.btn-help:hover {
   border-color: var(--accent);
   color: var(--accent);
   background-color: var(--bg);
@@ -259,7 +267,6 @@ main {
   font-size: 14px;
 }
 
-/* badges */
 .badges {
   display: flex;
   flex-direction: column;
@@ -303,7 +310,6 @@ main {
   color: var(--cta);
 }
 
-/* confetti canvas */
 #confettiCanvas {
   position: fixed;
   left: 0;
@@ -314,7 +320,6 @@ main {
   z-index: 9999;
 }
 
-/* modal overlay (kept after discover styles) */
 .modal-overlay {
   position: fixed;
   inset: 0;

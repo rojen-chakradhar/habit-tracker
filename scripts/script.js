@@ -368,7 +368,6 @@ function renderHabits() {
   });
 }
 
-// small utilities / UI data
 function todayKey() { return getLocalYMD(); }
 
 const quotes = [
@@ -460,7 +459,6 @@ function initSuggestions() {
   });
 }
 
-// --- lightweight confetti ---
 function launchConfetti() {
   const canvas = document.getElementById('confettiCanvas');
   if (!canvas) return;
@@ -561,10 +559,7 @@ function init() {
 }
 
 window.addEventListener('DOMContentLoaded', () => {
-  // Start app
   init();
-
-  // Guided tour integration using Intro.js (plain JS friendly)
   function startTour() {
     if (typeof introJs === 'undefined') return;
     introJs().setOptions({
@@ -588,7 +583,6 @@ window.addEventListener('DOMContentLoaded', () => {
 
   function startTourIfNeeded() {
     if (!localStorage.getItem('seenTour')) {
-      // small delay to ensure DOM/layout ready
       setTimeout(startTour, 600);
     }
   }
