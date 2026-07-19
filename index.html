@@ -33,15 +33,30 @@
           <p class="stat-sub" id="statProgressSub">completion rate</p>
         </div>
       </div>
-      <h3 class="section-label">your habits</h3>
+
+      <h3 class="section-label">discover</h3>
+      <div class="discover">
+        <div class="quote-card">
+          <h4 class="small-label">today's spark</h4>
+          <p id="dailyQuote" class="daily-quote">Build something small today — consistency beats intensity.</p>
+        </div>
+        <div class="suggestions">
+          <h4 class="small-label">try one of these</h4>
+          <div class="quick-suggestions" id="suggestions">
+            <!-- quick suggestion buttons injected by JS -->
+          </div>
+        </div>
+      </div>
+
+      <h3 class="section-label">track your habits</h3>
       <div class="habits-list"></div>
       <div class="empty-state" id="emptyState">
         <i class="ri-inbox-line empty-icon"></i>
-        <p class="empty-title">nothing tracked yet</p>
-        <p class="empty-sub">Add your first bait to start building your streak.</p>
+        <p class="empty-title">Start your streak</p>
+        <p class="empty-sub">Add a habit and join the Beest HackClub challenge — make it yours.</p>
       </div>
     </main>
-    <div class="modla-overlay" id="modalOverlay">
+    <div class="modal-overlay" id="modalOverlay">
       <div class="modal">
         <h2>new habit</h2>
         <div class="field">
