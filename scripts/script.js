@@ -560,4 +560,41 @@ function init() {
   renderBadges();
 }
 
-window.addEventListener('DOMContentLoaded', init);
+window.addEventListener('DOMContentLoaded', () => {
+  // Start app
+  init();
+
+  // Guided tour integration using Intro.js (plain JS friendly)
+  function startTour() {
+    if (typeof introJs === 'undefined') return;
+    introJs().setOptions({
+      steps: [
+        { intro: "Welcome to Habit Tracker! Let's walk through the main parts of the app." },
+        { element: '#openModal', intro: 'Click here to add a new habit.' },
+        { element: '.empty-state', intro: 'This is the empty state — add your first habit to get started.' },
+        { element: '.habits-list', intro: 'Your habits appear here. Click a day bubble to mark complete.' },
+        { element: '.summary', intro: 'Overview cards show today progress, best streak, and weekly rate.' },
+        { element: '#badgesList', intro: 'Earn badges as you add habits and reach milestones.' },
+        { intro: 'That completes the tour — good luck building streaks!' }
+      ],
+      showProgress: true,
+      exitOnOverlayClick: false
+    }).oncomplete(function() {
+      localStorage.setItem('seenTour', '1');
+    }).onexit(function() {
+      localStorage.setItem('seenTour', '1');
+    }).start();
+  }
+
+  function startTourIfNeeded() {
+    if (!localStorage.getItem('seenTour')) {
+      // small delay to ensure DOM/layout ready
+      setTimeout(startTour, 600);
+    }
+  }
+
+  const tourBtn = document.getElementById('startTourBtn');
+  if (tourBtn) tourBtn.addEventListener('click', startTour);
+
+  startTourIfNeeded();
+});

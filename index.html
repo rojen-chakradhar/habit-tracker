@@ -6,13 +6,17 @@
     <title>Habit Tracker</title>
     <link rel="stylesheet" href="./styles/style.css">
     <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://unpkg.com/intro.js/minified/introjs.min.css" />
   </head>
   <body>
     <header>
       <a href="index.html"><h1 class="logo">habit tracker</h1></a>
       <nav>
         <div class="date-pill" id="datePill">sun jan 1</div>
-        <button class="btn-add" id="openModal"><i class="ri-add-line"></i> new habit</button>
+        <div class="nav-actions">
+          <button class="btn-help" id="startTourBtn"><i class="ri-information-line"></i> take tour</button>
+          <button class="btn-add" id="openModal"><i class="ri-add-line"></i> new habit</button>
+        </div>
       </nav>
     </header>
     <main>
@@ -88,6 +92,7 @@
     </div>
     <div class="toast" id="toast">dsf</div>
     <canvas id="confettiCanvas"></canvas>
+    <script src="https://unpkg.com/intro.js/minified/intro.min.js"></script>
     <script src="./scripts/script.js"></script>
   </body>
 </html>
