@@ -19,18 +19,18 @@
       <div class="summary">
         <div class="stat-card">
           <h3 class="stat-label">today's progress</h3>
-          <p class="stat-value" id="stat-Progress">0/0</p>
-          <p class="stat-sub" id="statProgressSub">habits completed</p>
+          <p class="stat-value" id="statTodayProgress">0/0</p>
+          <p class="stat-sub" id="statTodaySub">habits completed</p>
         </div>
         <div class="stat-card">
           <h3 class="stat-label">best streak</h3>
-          <p class="stat-value" id="stat-Progress">0</p>
-          <p class="stat-sub" id="statProgressSub">days in a row</p>
+          <p class="stat-value" id="statBestStreak">0</p>
+          <p class="stat-sub" id="statBestSub">days in a row</p>
         </div>
         <div class="stat-card">
           <h3 class="stat-label">weekly rate</h3>
-          <p class="stat-value" id="stat-Progress">0%</p>
-          <p class="stat-sub" id="statProgressSub">completion rate</p>
+          <p class="stat-value" id="statWeeklyRate">0%</p>
+          <p class="stat-sub" id="statWeeklySub">completion rate</p>
         </div>
       </div>
 
@@ -52,8 +52,8 @@
       <div class="habits-list"></div>
       <div class="empty-state" id="emptyState">
         <i class="ri-inbox-line empty-icon"></i>
-        <p class="empty-title">Start your streak</p>
-        <p class="empty-sub">Add a habit and join the Beest HackClub challenge — make it yours.</p>
+        <p class="empty-title">nothing tracked yet</p>
+        <p class="empty-sub">Add your first habit to start building your streak.</p>
       </div>
     </main>
     <div class="modal-overlay" id="modalOverlay">
@@ -61,19 +61,19 @@
         <h2>new habit</h2>
         <div class="field">
           <label>name</label>
-          <input type="text" id="habitName" placeholder="e.g. Wake Up, Morking Walk, Read...">
+          <input type="text" id="habitName" placeholder="e.g. Wake Up, Morning Walk, Read...">
         </div>
         <div class="field">
-          <label>icon</label>
-          <div class="emoji-grid" id="emojiGrid"></div>
-        </div>
-        <div class="field">
-          <label>frequency</label>
-          <select id="habitFreq">
-            <option value="daily">daily</option>
-            <option value="weekdays">weekdays</option>
-            <option value="weekends">weekends</option>
-          </select>
+          <label>track on</label>
+          <div class="day-selector" id="daySelector">
+            <button type="button" class="day-select-btn selected" data-day="0" title="Sunday">S</button>
+            <button type="button" class="day-select-btn selected" data-day="1" title="Monday">M</button>
+            <button type="button" class="day-select-btn selected" data-day="2" title="Tuesday">T</button>
+            <button type="button" class="day-select-btn selected" data-day="3" title="Wednesday">W</button>
+            <button type="button" class="day-select-btn selected" data-day="4" title="Thursday">T</button>
+            <button type="button" class="day-select-btn selected" data-day="5" title="Friday">F</button>
+            <button type="button" class="day-select-btn selected" data-day="6" title="Saturday">S</button>
+          </div>
         </div>
         <div class="modal-actions">
           <button class="btn-cancel" id="closeModal">cancel</button>
